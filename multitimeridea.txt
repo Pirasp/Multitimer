@@ -1,0 +1,16 @@
+multitimer idee:
+
+Swing oberfläche
+10 fixe timer
+
+jeder timer ist ein thread
+	timer variablen sind in arrays gespeichert
+		string -> name | bool -> isStarted | long -> time
+
+versteckter thread, der alle paar minuten speichert
+
++speichern/laden ist einfach
++relativ einfach umzusetzen
++einfache umsetzung ohne speicherfunktion und einfache integration solcher
+
+-schlecht expandierbar? (zumindest deutlich mehr komplexität)
