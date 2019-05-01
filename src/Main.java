@@ -2,7 +2,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Main {
 
@@ -24,7 +31,7 @@ public class Main {
 
 		//initialisation with 10 timers (runtime expansion planned)
 		for (int i=0; i<10; i++){
-			timerNames.add(Integer.toString(i));
+			timerNames.add("Timer: "+ i);
 			timerVals.add(1L);
 		}
 
@@ -42,9 +49,10 @@ public class Main {
 			buttons.add(new JButton(stringify(i)));
 			timerpane.add(buttons.get(i));
 		}
-
+		load();
 		frame.getContentPane().add(BorderLayout.CENTER, timerpane);
 
+		//UI thread
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -56,9 +64,7 @@ public class Main {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						activetimer = -1;
-						//button.setText(Long.toString(timerVals.get(1)));
-						//frame.revalidate();
-						//frame.repaint();
+						save();
 					}
 				});
 
@@ -82,6 +88,11 @@ public class Main {
 			@Override
 			public void run() {
 				for(;;){
+					//update timers
+					for (int i=0; i<ammount; i++){
+						buttons.get(i).setText(stringify(i));
+					}
+					//timer selection
 					if(activetimer >= 0){
 						int lactive = activetimer;
 						long start = System.currentTimeMillis();
@@ -91,11 +102,6 @@ public class Main {
 						}catch (Exception e){}
 						Long time = timerVals.get(lactive);
 						timerVals.set(lactive, time + (System.currentTimeMillis()-start));
-
-						//update timers
-						for (int i=0; i<ammount; i++){
-							buttons.get(i).setText(stringify(i));
-						}
 
 						frame.revalidate();
 						frame.repaint();
@@ -109,8 +115,53 @@ public class Main {
 	}
 
 	public static void save(){
-
+		try {
+			PrintWriter writer = new PrintWriter("Multitimer.txt");
+			//writer.println(Integer.toString(ammount));
+			for (int i = 0; i < ammount; i++) {
+				writer.println(timerNames.get(i));
+				writer.println(timerVals.get(i));
+			}
+			writer.close();
+		}catch(Exception e){
+			System.out.println("Failed to save!");
+		}
 	}
+	public static void load(){
+		//TODO this still has to be expanded once more timers can be added
+		//read lines from file
+		ArrayList<String> lines = new ArrayList<>();
+		try (Scanner s = new Scanner(new FileReader("Multitimer.txt"))) {
+			while (s.hasNext()) {
+				lines.add(s.nextLine());
+			}
+		}
+		catch (Exception e){
+		}
+		//parse lines into appropriate lists
+		try{
+			boolean isName = true;
+			int namesparsed = 0;
+			int linesparsed = 0;
+			for (int i=0; i<lines.size(); i++){
+				if(isName){
+					isName = false;
+					String s = lines.get(i);
+					timerNames.set(namesparsed, s);
+					namesparsed++;
+				}
+				else {
+					isName = true;
+					String s = lines.get(i);
+					timerVals.set(linesparsed, Long.valueOf(s));
+					linesparsed++;
+				}
+			}
+		}catch (Exception e){
+			System.out.println("error while parsing file");
+		}
+	}
+
 	public static String stringify(int f){
 		long timeS = timerVals.get(f)/1000;
 		return ((timeS/60)/60+":"+(timeS/60)%60+":"+timeS%60);
