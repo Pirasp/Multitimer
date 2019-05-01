@@ -137,6 +137,7 @@ public class Main {
 			}
 		}
 		catch (Exception e){
+			System.out.println("loading failed! no file to load?");
 		}
 		//parse lines into appropriate lists
 		try{
