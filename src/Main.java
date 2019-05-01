@@ -14,10 +14,13 @@ public class Main {
 	public static int activetimer = -1; //-1 as in no timer is activated
 	//timing variable for saves every 3 mins
 	public static int secsto3min = 0;
+	//ammount of timers
+	public static int ammount = 10;
 
 	public static void main(String[] args) {
 
 		JFrame frame = new JFrame("Multitimer");
+		ArrayList<JButton> buttons = new ArrayList<JButton>();
 
 		//initialisation with 10 timers (runtime expansion planned)
 		for (int i=0; i<10; i++){
@@ -34,28 +37,11 @@ public class Main {
 		//TODO!!!---------------------------------------
 		//Refactor timerbuttons into loops and arrays
 
-		//timerbuttons
-		JButton timer0 = new JButton(Long.toString(timerVals.get(0)));
-		JButton timer1 = new JButton(Long.toString(timerVals.get(1)));
-		JButton timer2 = new JButton(Long.toString(timerVals.get(2)));
-		JButton timer3 = new JButton(Long.toString(timerVals.get(3)));
-		JButton timer4 = new JButton(Long.toString(timerVals.get(4)));
-		JButton timer5 = new JButton(Long.toString(timerVals.get(5)));
-		JButton timer6 = new JButton(Long.toString(timerVals.get(6)));
-		JButton timer7 = new JButton(Long.toString(timerVals.get(7)));
-		JButton timer8 = new JButton(Long.toString(timerVals.get(8)));
-		JButton timer9 = new JButton(Long.toString(timerVals.get(9)));
-
-		timerpane.add(timer0);
-		timerpane.add(timer1);
-		timerpane.add(timer2);
-		timerpane.add(timer3);
-		timerpane.add(timer4);
-		timerpane.add(timer5);
-		timerpane.add(timer6);
-		timerpane.add(timer7);
-		timerpane.add(timer8);
-		timerpane.add(timer9);
+		//timerbuttons in loop and add them to timerpane
+		for (int i=0; i<ammount; i++){
+			buttons.add(new JButton(stringify(i)));
+			timerpane.add(buttons.get(i));
+		}
 
 		frame.getContentPane().add(BorderLayout.CENTER, timerpane);
 
@@ -75,66 +61,17 @@ public class Main {
 						//frame.repaint();
 					}
 				});
-				timer0.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						activetimer = 0;
-					}
-				});
-				timer1.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						activetimer = 1;
-					}
-				});
-				timer2.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						activetimer = 2;
-					}
-				});
-				timer3.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						activetimer = 3;
-					}
-				});
-				timer4.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						activetimer = 4;
-					}
-				});
-				timer5.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						activetimer = 5;
-					}
-				});
-				timer6.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						activetimer = 6;
-					}
-				});
-				timer7.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						activetimer = 7;
-					}
-				});
-				timer8.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						activetimer = 8;
-					}
-				});
-				timer9.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						activetimer = 9;
-					}
-				});
+
+				//adding actionlisteners
+				for(int i=0; i<ammount; i++){
+					final int l = i;
+					buttons.get(i).addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							activetimer = l;
+						}
+					});
+				}
 
 				frame .setVisible(true);
 			}
@@ -156,16 +93,9 @@ public class Main {
 						timerVals.set(lactive, time + (System.currentTimeMillis()-start));
 
 						//update timers
-						timer0.setText(stringify(0));
-						timer1.setText(stringify(1));
-						timer2.setText(stringify(2));
-						timer3.setText(stringify(3));
-						timer4.setText(stringify(4));
-						timer5.setText(stringify(5));
-						timer6.setText(stringify(6));
-						timer7.setText(stringify(7));
-						timer8.setText(stringify(8));
-						timer9.setText(stringify(9));
+						for (int i=0; i<ammount; i++){
+							buttons.get(i).setText(stringify(i));
+						}
 
 						frame.revalidate();
 						frame.repaint();
