@@ -1,20 +1,20 @@
-timer 3
-10850000
+Top secret
+15002007
 Timer: 1
-3003
+7032
 Timer: 2
 1
 Timer: 3
-1
+2010
 Timer: 4
-1
+0
 Timer: 5
-1
+2002
 Timer: 6
-1
+1002
 Timer: 7
 1
-Timer: 8
+üäöß
 1
-Timer: 9
-1
+bottom secret
+4020

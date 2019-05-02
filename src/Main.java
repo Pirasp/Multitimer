@@ -29,7 +29,7 @@ public class Main {
 		JFrame frame = new JFrame("Multitimer");
 		//ui elements required for every timer
 		ArrayList<JPanel> timerpanels = new ArrayList<>();
-		ArrayList<JButton> names = new ArrayList<>(), hs = new ArrayList<>(), ms = new ArrayList<>(), ss = new ArrayList<>();
+		ArrayList<JButton> names = new ArrayList<>(), hs = new ArrayList<>(), ms = new ArrayList<>(), ss = new ArrayList<>(), rb = new ArrayList<>();
 		ArrayList<JButton> buttons = new ArrayList<JButton>();
 
 		//initialisation with 10 timers (runtime expansion planned)
@@ -48,11 +48,14 @@ public class Main {
 		for(int i=0; i<ammount; i++){
 			timerpanels.add(new JPanel());
 			timerpanels.get(i).setLayout(new FlowLayout());
+			rb.add(new JButton("RESET"));
 			names.add(new JButton(timerNames.get(i)));
 			hs.add(new JButton(hos(i)));
 			ms.add(new JButton(mis(i)));
 			ss.add(new JButton(ses(i)));
 			buttons.add(new JButton("start"));
+
+			timerpanels.get(i).add(rb.get(i));
 			timerpanels.get(i).add(names.get(i));
 			timerpanels.get(i).add(hs.get(i));
 			timerpanels.get(i).add(new JLabel(":"));
@@ -62,6 +65,8 @@ public class Main {
 			timerpanels.get(i).add(buttons.get(i));
 			buttons.get(i).setBackground(Color.GREEN);
 			buttons.get(i).setPreferredSize(new Dimension(75, 30));
+			rb.get(i).setBackground(Color.ORANGE);
+			rb.get(i).setPreferredSize(new Dimension(75, 30));
 			names.get(i).setBackground(Color.LIGHT_GRAY);
 			names.get(i).setPreferredSize(new Dimension(250, 30));
 			hs.get(i).setBackground(Color.LIGHT_GRAY);
@@ -83,7 +88,7 @@ public class Main {
 			@Override
 			public void run() {
 				frame .setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-				frame.setSize(550, 450);
+				frame.setSize(620, 450);
 				frame.setResizable(false);
 				frame.getContentPane().add(BorderLayout.SOUTH, stbutton);
 				stbutton.setBackground(Color.RED);
@@ -103,6 +108,19 @@ public class Main {
 				//adding actionlisteners
 				for(int i=0; i<ammount; i++){
 					final int l = i;
+					rb.get(i).addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							String s = JOptionPane.showInputDialog(null,
+									"RESET timer "+timerNames.get(l)+"?    y/n",
+									"RESET timer "+timerNames.get(l)+"?",
+									JOptionPane.PLAIN_MESSAGE);
+							if(s.equals("y")){
+								timerVals.set(l, 0L);
+								timerNames.set(l, "Timer: "+l);
+							}
+						}
+					});
 					names.get(i).addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
@@ -162,18 +180,11 @@ public class Main {
 									"Wertänderung",
 									JOptionPane.PLAIN_MESSAGE);
 							if(s != null) {
-								long newtime = (Long.valueOf(s) / 1000);
+								long newtime = (Long.valueOf(s) * 1000);
 								newtime += (Long.valueOf(mins) * 60) * 1000;
 								newtime += ((Long.valueOf(hous) * 60) * 60) * 1000;
 								timerVals.set(l, newtime);
 							}
-						}
-					});
-
-					ss.get(i).addActionListener(new ActionListener() {
-						@Override
-						public void actionPerformed(ActionEvent e) {
-
 						}
 					});
 					buttons.get(i).addActionListener(new ActionListener() {
@@ -271,11 +282,6 @@ public class Main {
 					String s = lines.get(i);
 					timerVals.set(linesparsed, Long.valueOf(s));
 					linesparsed++;
-				}
-
-				if (linesparsed != namesparsed){
-					System.out.println("error in file: number of names and times dont match");
-					throw new Exception();
 				}
 			}
 		}
