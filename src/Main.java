@@ -47,7 +47,7 @@ public class Main {
 		//build timerpanels
 		for(int i=0; i<ammount; i++){
 			timerpanels.add(new JPanel());
-			timerpanels.get(i).setLayout(new BoxLayout(timerpanels.get(i), BoxLayout.X_AXIS));
+			timerpanels.get(i).setLayout(new FlowLayout());
 			names.add(new JButton(timerNames.get(i)));
 			hs.add(new JButton(hos(i)));
 			ms.add(new JButton(mis(i)));
@@ -59,10 +59,15 @@ public class Main {
 			timerpanels.get(i).add(ss.get(i));
 			timerpanels.get(i).add(buttons.get(i));
 			buttons.get(i).setBackground(Color.GREEN);
+			buttons.get(i).setPreferredSize(new Dimension(75, 30));
 			names.get(i).setBackground(Color.LIGHT_GRAY);
+			names.get(i).setPreferredSize(new Dimension(250, 30));
 			hs.get(i).setBackground(Color.LIGHT_GRAY);
+			hs.get(i).setPreferredSize(new Dimension(50, 30));
 			ms.get(i).setBackground(Color.LIGHT_GRAY);
+			ms.get(i).setPreferredSize(new Dimension(50, 30));
 			ss.get(i).setBackground(Color.LIGHT_GRAY);
+			ss.get(i).setPreferredSize(new Dimension(50, 30));
 		}
 
 		//timerbuttons in loop and add them to timerpane
@@ -76,7 +81,8 @@ public class Main {
 			@Override
 			public void run() {
 				frame .setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-				frame.setSize(500, 350);
+				frame.setSize(550, 450);
+				frame.setResizable(false);
 				frame.getContentPane().add(BorderLayout.SOUTH, stbutton);
 				stbutton.setBackground(Color.RED);
 
