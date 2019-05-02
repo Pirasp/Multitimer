@@ -1,15 +1,12 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 
 public class Main {
 
@@ -87,9 +84,15 @@ public class Main {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				frame .setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+				frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 				frame.setSize(620, 450);
 				frame.setResizable(false);
+				Image im = null;
+				try {
+					im = ImageIO.read(getClass().getResource("icon.png"));
+				} catch (IOException ex) {
+				}
+				frame.setIconImage(im);
 				frame.getContentPane().add(BorderLayout.SOUTH, stbutton);
 				stbutton.setBackground(Color.RED);
 
@@ -114,7 +117,7 @@ public class Main {
 							String s = JOptionPane.showInputDialog(null,
 									"RESET timer "+timerNames.get(l)+"?    y/n",
 									"RESET timer "+timerNames.get(l)+"?",
-									JOptionPane.PLAIN_MESSAGE);
+									JOptionPane.WARNING_MESSAGE);
 							if(s.equals("y")){
 								timerVals.set(l, 0L);
 								timerNames.set(l, "Timer: "+l);
