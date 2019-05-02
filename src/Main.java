@@ -55,7 +55,9 @@ public class Main {
 			buttons.add(new JButton("start"));
 			timerpanels.get(i).add(names.get(i));
 			timerpanels.get(i).add(hs.get(i));
+			timerpanels.get(i).add(new JLabel(":"));
 			timerpanels.get(i).add(ms.get(i));
+			timerpanels.get(i).add(new JLabel(":"));
 			timerpanels.get(i).add(ss.get(i));
 			timerpanels.get(i).add(buttons.get(i));
 			buttons.get(i).setBackground(Color.GREEN);
