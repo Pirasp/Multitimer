@@ -1,7 +1,7 @@
-Timer: 0
-100003002
 Timer: 1
-4003
+32058
+Timer: 1
+1
 Timer: 2
 1
 Timer: 3
@@ -15,6 +15,6 @@ Timer: 6
 Timer: 7
 1
 Timer: 8
-1000000
+1
 Timer: 9
 1

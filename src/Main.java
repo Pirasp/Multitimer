@@ -27,6 +27,9 @@ public class Main {
 	public static void main(String[] args) {
 
 		JFrame frame = new JFrame("Multitimer");
+		//ui elements required for every timer
+		ArrayList<JPanel> timerpanels = new ArrayList<>();
+		ArrayList<JTextField> names = new ArrayList<>(), hs = new ArrayList<>(), ms = new ArrayList<>(), ss = new ArrayList<>();
 		ArrayList<JButton> buttons = new ArrayList<JButton>();
 
 		//initialisation with 10 timers (runtime expansion planned)
@@ -41,17 +44,28 @@ public class Main {
 		JPanel timerpane = new JPanel();
 		timerpane.setLayout(new BoxLayout(timerpane, BoxLayout.Y_AXIS));
 
-		//TODO!!!---------------------------------------
-		//Refactor timerbuttons into loops and arrays
+		//build timerpanels
+		for(int i=0; i<ammount; i++){
+			timerpanels.add(new JPanel());
+			timerpanels.get(i).setLayout(new BoxLayout(timerpanels.get(i), BoxLayout.X_AXIS));
+			names.add(new JTextField(timerNames.get(i)));
+			hs.add(new JTextField(hos(i)));
+			ms.add(new JTextField(mis(i)));
+			ss.add(new JTextField(ses(i)));
+			buttons.add(new JButton(stringify(i)));
+			timerpanels.get(i).add(names.get(i));
+			timerpanels.get(i).add(hs.get(i));
+			timerpanels.get(i).add(ms.get(i));
+			timerpanels.get(i).add(ss.get(i));
+			timerpanels.get(i).add(buttons.get(i));
+		}
 
 		//timerbuttons in loop and add them to timerpane
 		for (int i=0; i<ammount; i++){
-			buttons.add(new JButton(stringify(i)));
-			timerpane.add(buttons.get(i));
+			timerpane.add(timerpanels.get(i));
 		}
-		load();
 		frame.getContentPane().add(BorderLayout.CENTER, timerpane);
-
+		load();
 		//UI thread
 		new Thread(new Runnable() {
 			@Override
@@ -90,6 +104,10 @@ public class Main {
 				for(;;){
 					//update timers
 					for (int i=0; i<ammount; i++){
+						names.get(i).setText(timerNames.get(i));
+						hs.get(i).setText(hos(i));
+						ms.get(i).setText(mis(i));
+						ss.get(i).setText(ses(i));
 						buttons.get(i).setText(stringify(i));
 					}
 					//timer selection
@@ -166,6 +184,20 @@ public class Main {
 	public static String stringify(int f){
 		long timeS = timerVals.get(f)/1000;
 		return ((timeS/60)/60+":"+(timeS/60)%60+":"+timeS%60);
+	}
 
+
+	//"stringify" für ausgabe in textfields
+	public static String hos(int f){
+		long timeS = timerVals.get(f)/1000;
+		return Long.toString((timeS/60)%60);
+	}
+	public static String mis(int f){
+		long timeS = timerVals.get(f)/1000;
+		return Long.toString((timeS/60)/60);
+	}
+	public static String ses(int f){
+		long timeS = timerVals.get(f)/1000;
+		return Long.toString(timeS%60);
 	}
 }
