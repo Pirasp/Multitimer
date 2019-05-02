@@ -272,8 +272,14 @@ public class Main {
 					timerVals.set(linesparsed, Long.valueOf(s));
 					linesparsed++;
 				}
+
+				if (linesparsed != namesparsed){
+					System.out.println("error in file: number of names and times dont match");
+					throw new Exception();
+				}
 			}
-		}catch (Exception e){
+		}
+		catch (Exception e){
 			System.out.println("error while parsing file");
 		}
 	}
