@@ -29,7 +29,7 @@ public class Main {
 		JFrame frame = new JFrame("Multitimer");
 		//ui elements required for every timer
 		ArrayList<JPanel> timerpanels = new ArrayList<>();
-		ArrayList<JTextField> names = new ArrayList<>(), hs = new ArrayList<>(), ms = new ArrayList<>(), ss = new ArrayList<>();
+		ArrayList<JButton> names = new ArrayList<>(), hs = new ArrayList<>(), ms = new ArrayList<>(), ss = new ArrayList<>();
 		ArrayList<JButton> buttons = new ArrayList<JButton>();
 
 		//initialisation with 10 timers (runtime expansion planned)
@@ -48,16 +48,21 @@ public class Main {
 		for(int i=0; i<ammount; i++){
 			timerpanels.add(new JPanel());
 			timerpanels.get(i).setLayout(new BoxLayout(timerpanels.get(i), BoxLayout.X_AXIS));
-			names.add(new JTextField(timerNames.get(i)));
-			hs.add(new JTextField(hos(i)));
-			ms.add(new JTextField(mis(i)));
-			ss.add(new JTextField(ses(i)));
-			buttons.add(new JButton(stringify(i)));
+			names.add(new JButton(timerNames.get(i)));
+			hs.add(new JButton(hos(i)));
+			ms.add(new JButton(mis(i)));
+			ss.add(new JButton(ses(i)));
+			buttons.add(new JButton("start"));
 			timerpanels.get(i).add(names.get(i));
 			timerpanels.get(i).add(hs.get(i));
 			timerpanels.get(i).add(ms.get(i));
 			timerpanels.get(i).add(ss.get(i));
 			timerpanels.get(i).add(buttons.get(i));
+			buttons.get(i).setBackground(Color.GREEN);
+			names.get(i).setBackground(Color.LIGHT_GRAY);
+			hs.get(i).setBackground(Color.LIGHT_GRAY);
+			ms.get(i).setBackground(Color.LIGHT_GRAY);
+			ss.get(i).setBackground(Color.LIGHT_GRAY);
 		}
 
 		//timerbuttons in loop and add them to timerpane
@@ -71,13 +76,18 @@ public class Main {
 			@Override
 			public void run() {
 				frame .setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-				frame.setSize(300, 500);
+				frame.setSize(500, 350);
 				frame.getContentPane().add(BorderLayout.SOUTH, stbutton);
+				stbutton.setBackground(Color.RED);
 
 				stbutton.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						activetimer = -1;
+						for(int i=0; i<ammount; i++){
+							buttons.get(i).setEnabled(true);
+							buttons.get(i).setBackground(Color.GREEN);
+						}
 						save();
 					}
 				});
@@ -85,10 +95,89 @@ public class Main {
 				//adding actionlisteners
 				for(int i=0; i<ammount; i++){
 					final int l = i;
+					names.get(i).addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							String s = JOptionPane.showInputDialog(null,
+									"Gib einen neuen Namen ein:",
+									"Namensänderung",
+									JOptionPane.PLAIN_MESSAGE);
+							if (s != null) {
+								timerNames.set(l, s);
+							}
+						}
+					});
+					hs.get(i).addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							String s, secs, mins;
+							secs = ses(l);
+							mins = mis(l);
+							s = JOptionPane.showInputDialog(null,
+									"Gib einen neuen Stundenwert ein:",
+									"Wertänderung",
+									JOptionPane.PLAIN_MESSAGE);
+							if (s != null) {
+								long newtime = (Long.valueOf(secs) * 1000);
+								newtime += (Long.valueOf(mins) * 60) * 1000;
+								newtime += ((Long.valueOf(s) * 60) * 60) * 1000;
+								timerVals.set(l, newtime);
+							}
+						}
+					});
+					ms.get(i).addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							String s, secs, hous;
+							secs = ses(l);
+							hous = hos(l);
+							s = JOptionPane.showInputDialog(null,
+									"Gib einen neuen Minutenwert ein:",
+									"Wertänderung",
+									JOptionPane.PLAIN_MESSAGE);
+							if (s != null) {
+								long newtime = (Long.valueOf(secs) * 1000);
+								newtime += (Long.valueOf(s) * 60) * 1000;
+								newtime += ((Long.valueOf(hous) * 60) * 60) * 1000;
+								timerVals.set(l, newtime);
+							}
+						}
+					});
+					ss.get(i).addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							String s, mins, hous;
+							mins = mis(l);
+							hous = hos(l);
+							s = JOptionPane.showInputDialog(null,
+									"Gib einen neuen Sekundenwert ein:",
+									"Wertänderung",
+									JOptionPane.PLAIN_MESSAGE);
+							if(s != null) {
+								long newtime = (Long.valueOf(s) / 1000);
+								newtime += (Long.valueOf(mins) * 60) * 1000;
+								newtime += ((Long.valueOf(hous) * 60) * 60) * 1000;
+								timerVals.set(l, newtime);
+							}
+						}
+					});
+
+					ss.get(i).addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+
+						}
+					});
 					buttons.get(i).addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							activetimer = l;
+							for(int i=0; i<ammount; i++){
+								buttons.get(i).setEnabled(true);
+								buttons.get(i).setBackground(Color.GREEN);
+							}
+							buttons.get(l).setEnabled(false);
+							buttons.get(l).setBackground(Color.GRAY);
 						}
 					});
 				}
@@ -104,11 +193,11 @@ public class Main {
 				for(;;){
 					//update timers
 					for (int i=0; i<ammount; i++){
+
 						names.get(i).setText(timerNames.get(i));
 						hs.get(i).setText(hos(i));
 						ms.get(i).setText(mis(i));
 						ss.get(i).setText(ses(i));
-						buttons.get(i).setText(stringify(i));
 					}
 					//timer selection
 					if(activetimer >= 0){
@@ -190,11 +279,11 @@ public class Main {
 	//"stringify" für ausgabe in textfields
 	public static String hos(int f){
 		long timeS = timerVals.get(f)/1000;
-		return Long.toString((timeS/60)%60);
+		return Long.toString((timeS/60)/60);
 	}
 	public static String mis(int f){
 		long timeS = timerVals.get(f)/1000;
-		return Long.toString((timeS/60)/60);
+		return Long.toString((timeS/60)%60);
 	}
 	public static String ses(int f){
 		long timeS = timerVals.get(f)/1000;
